@@ -42,7 +42,7 @@ public class Prog1B {
 		BufferedReader buffR = null;
 		
 		int strRecordsLen = 0;
-		int totalLineLen = 0;
+		int totalLineLen = 0; // TODO: Not used yet
 		
 		try {
 			fileR = new FileReader(args[0]);
@@ -61,12 +61,13 @@ public class Prog1B {
 			records.setNarr1Length(dataStream.readInt());
 			records.setNarr2Length(dataStream.readInt());
 			
-			System.out.println("date length: " + records.getDateLength());
-			System.out.println("stratum length: " + records.getStratumLength());
-			System.out.println("race other length: " + records.getRaceOtherLength());
-			System.out.println("diag other length: " + records.getDiagOtherLength());
-			System.out.println("narr1 length: " + records.getNarr1Length());
-			System.out.println("narr2 length: " + records.getNarr2Length());
+			// TODO ERASE SYSTEM>OUT
+//			System.out.println("date length: " + records.getDateLength());
+//			System.out.println("stratum length: " + records.getStratumLength());
+//			System.out.println("race other length: " + records.getRaceOtherLength());
+//			System.out.println("diag other length: " + records.getDiagOtherLength());
+//			System.out.println("narr1 length: " + records.getNarr1Length());
+//			System.out.println("narr2 length: " + records.getNarr2Length());
 			
 			// Combine the lengths of the string records
 			strRecordsLen = records.getDateLength() + records.getStratumLength() + 
@@ -85,7 +86,21 @@ public class Prog1B {
 			System.out.print(records.getTrmt_date() + " ");
 			System.out.println(records.getNarr1());
 			
-			dataStream.seek(totalLineLen);
+			records.readBinary(dataStream);
+			System.out.print(records.getCpscCase() + " ");
+			System.out.print(records.getTrmt_date() + " ");
+			System.out.println(records.getNarr1());
+			
+			records.readBinary(dataStream);
+			System.out.print(records.getCpscCase() + " ");
+			System.out.print(records.getTrmt_date() + " ");
+			System.out.println(records.getNarr1());
+			
+			records.readBinary(dataStream);
+			System.out.print(records.getCpscCase() + " ");
+			System.out.print(records.getTrmt_date() + " ");
+			System.out.println(records.getNarr1());
+			
 			records.readBinary(dataStream);
 			System.out.print(records.getCpscCase() + " ");
 			System.out.print(records.getTrmt_date() + " ");
