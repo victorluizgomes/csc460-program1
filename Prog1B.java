@@ -61,6 +61,13 @@ public class Prog1B {
 			records.setNarr1Length(dataStream.readInt());
 			records.setNarr2Length(dataStream.readInt());
 			
+			System.out.println("date length: " + records.getDateLength());
+			System.out.println("stratum length: " + records.getStratumLength());
+			System.out.println("race other length: " + records.getRaceOtherLength());
+			System.out.println("diag other length: " + records.getDiagOtherLength());
+			System.out.println("narr1 length: " + records.getNarr1Length());
+			System.out.println("narr2 length: " + records.getNarr2Length());
+			
 			// Combine the lengths of the string records
 			strRecordsLen = records.getDateLength() + records.getStratumLength() + 
 					records.getRaceOtherLength() + records.getDiagOtherLength() + 

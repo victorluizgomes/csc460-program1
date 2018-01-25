@@ -46,6 +46,7 @@ public class Prog1A {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); // to parse through dates
 		Date 			 date = null;									  // stores the dates
 		String 			 currentLine = null;							  // stores current line of file
+		String[] 		 strArr = null;
 		String[] 		 splitted = null;								  // for Strings between \t
 		String 			 binFileName = null;							  // the filename.bin
 		
@@ -78,13 +79,23 @@ public class Prog1A {
 			while((currentLine = buffR.readLine()) != null) {
 				
 				// Split the line in the tab to get all fields
+				strArr = new String[19];
 				splitted = currentLine.split("\t");
+				for(int i = 0; i < strArr.length; i++) {
+					
+					if(i == 18 && splitted.length <= 18) {
+						strArr[i] = "";
+					} else {
+						
+						strArr[i] = splitted[i];
+					}
+				}
 				
 				// Sets the maximum lengths of the file
-				setupMaxLength(splitted, records);
+				setupMaxLength(strArr, records);
 				
 				// Get the date from the currentLine's trmt_date
-				date = dateFormat.parse(splitted[1]);
+				date = dateFormat.parse(strArr[1]);
 				
 				// if there is not an ArrayList corresponding to the key, create one
 				if(tmap.get(date) == null) {
@@ -100,25 +111,26 @@ public class Prog1A {
 				}
 			}
 			
-			boolean t = true;
-			
 			// Prints all the ordered lines with an additional inside loop for the duplicate dates
 			for(Entry<Date, ArrayList<String>> entry : tmap.entrySet()) {
 				for(int i = 0; i < entry.getValue().size(); i++) {
 					
 					// Get the current line and split it
 					currentLine = entry.getValue().get(i);
+					strArr = new String[19];
 					splitted = currentLine.split("\t");
-					
-					if(t) 
-						System.out.println(currentLine);
-					
-					if(i == 5) {
-						t = false;
+					for(int j = 0; j < strArr.length; j++) {
+						
+						if(j == 18 && splitted.length <= 18) {
+							strArr[j] = "";
+						} else {
+							
+							strArr[j] = splitted[j];
+						}
 					}
 					
 					// Uses setters to setup the records
-					setupRecords(splitted, records);
+					setupRecords(strArr, records);
 					
 					// Write to the Binary File
 					records.writeBinary(dataStream);
@@ -126,6 +138,12 @@ public class Prog1A {
 			}
 			
 			// write at the end of the binary file the maximum lengths
+			System.out.println("date length: " + records.getDateLength());
+			System.out.println("stratum length: " + records.getStratumLength());
+			System.out.println("race other length: " + records.getRaceOtherLength());
+			System.out.println("diag other length: " + records.getDiagOtherLength());
+			System.out.println("narr1 length: " + records.getNarr1Length());
+			System.out.println("narr2 length: " + records.getNarr2Length());
 			records.writeMaxLengths(dataStream);
 			
 			fileR.close();
@@ -172,10 +190,10 @@ public class Prog1A {
 		if(rec.getDiagOtherLength() < arr[10].length()) 
 			rec.setDiagOtherLength(arr[10].length());
 		
-		if(arr.length >= 18 && rec.getNarr1Length() < arr[17].length()) 
+		if(rec.getNarr1Length() < arr[17].length()) 
 			rec.setNarr1Length(arr[17].length());
 		
-		if(arr.length >= 19 && rec.getNarr2Length() < arr[18].length()) 
+		if(rec.getNarr2Length() < arr[18].length())
 			rec.setNarr2Length(arr[18].length());
 	}
 	
@@ -227,10 +245,8 @@ public class Prog1A {
 		else rec.setProd1(-1);
 		if(!arr[16].equals("")) rec.setProd2(Integer.parseInt(arr[16]));
 		else rec.setProd2(-1);
-		if(arr.length >= 18) rec.setNarr1(arr[17]);
-		else rec.setNarr1(" ");
-		if(arr.length >= 19) rec.setNarr2(arr[18]);
-		else rec.setNarr2(" ");
+		rec.setNarr1(arr[17]);
+		rec.setNarr2(arr[18]);
 	}
 }
 
@@ -422,33 +438,54 @@ class AllDataRecords {
 		byte[] narr1Byte = new byte[narr1Length];
 		byte[] narr2Byte = new byte[narr2Length];
 		
+		System.out.println("READ BINARY STUFF: ");
+		
 		// Read the fields from Binary file
 		try {
 			cpscCase = stream.readInt();
+			System.out.println("cpscCase: " + cpscCase);
 			stream.readFully(dateByte);
 			trmt_date = new String(dateByte);
+			System.out.println("trmt_date: " + trmt_date);
 			psu = stream.readInt();
-			weight = stream.readInt();
+			System.out.println("psu: " + psu);
+			weight = stream.readDouble();
+			System.out.println("weight: " + weight);
 			stream.readFully(stratumByte);
 			stratum = new String(stratumByte);
+			System.out.println("stratum: " + stratum);
 			age = stream.readInt();
+			System.out.println("age: " + age);
 			sex = stream.readInt();
+			System.out.println("sex: " + sex);
 			race = stream.readInt();
+			System.out.println("race: " + race);
 			stream.readFully(raceOtherByte);
 			race_other = new String(raceOtherByte);
+			System.out.println("race_other: " + race_other);
 			diag = stream.readInt();
+			System.out.println("diag: " + diag);
 			stream.readFully(diagOtherByte);
 			diag_other = new String(diagOtherByte);
+			System.out.println("diag_other: " + diag_other);
 			body_part = stream.readInt();
+			System.out.println("body_part: " + body_part);
 			disposition = stream.readInt();
+			System.out.println("disposition: " + disposition);
 			location = stream.readInt();
+			System.out.println("location: " + location);
 			fmv = stream.readInt();
+			System.out.println("fmv: " + fmv);
 			prod1 = stream.readInt();
+			System.out.println("prod1: " + prod1);
 			prod2 = stream.readInt();
+			System.out.println("prod2: " + prod2);
 			stream.readFully(narr1Byte);
 			narr1 = new String(narr1Byte);
+			System.out.println("narr1: " + narr1);
 			stream.readFully(narr2Byte);
 			narr2 = new String(narr2Byte);
+			System.out.println("narr2: " + narr2);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
